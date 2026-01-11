@@ -7,11 +7,12 @@ pages_build_output_dir = ".vercel/output/static"
 binding = "DB"
 database_name = "ecommerce-db"
 database_id = "e9bf7dca-a5a5-4942-ac1f-fbcf11cb60ea"
+migrations_dir = "drizzle/migrations"
 
-# R2 Bucket (uncomment after enabling R2 in Cloudflare dashboard)
-# [[r2_buckets]]
-# binding = "R2_BUCKET"
-# bucket_name = "digital-products"
+# R2 Bucket
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "digital-products"
 
 # Environment-specific configurations
 [env.production.vars]
