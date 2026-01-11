@@ -1,6 +1,6 @@
 name = "juliethgarcia-ecommerce"
 compatibility_date = "2024-01-01"
-pages_build_output_dir = ".vercel/output/static"
+pages_build_output_dir = ".next"
 
 # D1 Database
 [[d1_databases]]

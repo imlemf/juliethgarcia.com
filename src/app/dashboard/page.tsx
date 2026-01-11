@@ -1,12 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { auth } from '@/lib/auth/auth';
 import { redirect } from 'next/navigation';
-import { getDb } from '@/lib/db';
-import { getPurchasesByUserIdOrEmail } from '@/lib/db/queries/purchases';
 import { PurchasesList } from '@/components/dashboard/purchases-list';
-import { getRequestContext } from '@cloudflare/next-on-pages';
-
-export const runtime = 'edge';
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -15,10 +10,9 @@ export default async function DashboardPage() {
     redirect('/login');
   }
 
-  // Get all purchases for this user (by userId or email)
-  const context = getRequestContext();
-  const db = getDb((context.env as any).DB as D1Database);
-  const purchases = await getPurchasesByUserIdOrEmail(db, session.user.id, session.user.email);
+  // TODO: Fetch purchases from API route once Cloudflare Pages supports Next.js 16 bindings
+  // For now, showing empty state
+  const purchases: any[] = [];
 
   return (
     <div className="container mx-auto px-4 py-12">
