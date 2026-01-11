@@ -1,1 +1,3 @@
 # Cloudflare Pages deployment for juliethgarcia.com
+# This project is configured for Cloudflare Pages, not Workers
+# Build output: .vercel/output/static

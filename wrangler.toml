@@ -1,0 +1,18 @@
+name = "juliethgarcia"
+main = ".open-next/worker.js"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Assets configuration
+assets = { directory = ".open-next/assets", binding = "ASSETS" }
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "ecommerce-db"
+database_id = "e9bf7dca-a5a5-4942-ac1f-fbcf11cb60ea"
+
+# R2 Bucket
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "digital-products"

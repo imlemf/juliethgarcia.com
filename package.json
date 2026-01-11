@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && npm run worker:build",
+    "worker:build": "opennextjs-cloudflare build --skipBuild",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "echo 'Deploy handled by Cloudflare Pages' && exit 0",
+    "deploy": "wrangler deploy",
+    "preview": "npm run build && wrangler dev",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio"
@@ -40,6 +42,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260111.0",
+    "@opennextjs/cloudflare": "^1.14.8",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22.10.2",
     "@types/react": "^19.0.1",
