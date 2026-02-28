@@ -6,6 +6,7 @@ interface TurnstileProps {
   onExpire?: () => void;
   className?: string;
   size?: 'normal' | 'compact' | 'flexible';
+  theme?: 'light' | 'dark' | 'auto';
 }
 
 export interface TurnstileRef {
@@ -30,7 +31,7 @@ declare global {
 }
 
 export const Turnstile = forwardRef<TurnstileRef, TurnstileProps>(
-  function Turnstile({ onVerify, onError, onExpire, className, size = 'normal' }, ref) {
+  function Turnstile({ onVerify, onError, onExpire, className, size = 'normal', theme = 'auto' }, ref) {
     const containerRef = useRef<HTMLDivElement>(null);
     const widgetIdRef = useRef<string | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -121,7 +122,7 @@ export const Turnstile = forwardRef<TurnstileRef, TurnstileProps>(
       callback: (token: string) => onVerifyRef.current(token),
       'error-callback': () => onErrorRef.current?.(),
       'expired-callback': () => onExpireRef.current?.(),
-      theme: 'auto',
+      theme,
       size,
     });
 

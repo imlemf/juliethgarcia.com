@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
 import { Turnstile } from '@/components/auth/turnstile';
 import type { TurnstileRef } from '@/components/auth/turnstile';
@@ -46,6 +46,14 @@ export function NewsletterForm({ className, colors = {} }: NewsletterFormProps) 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsSmallScreen(window.innerWidth < 415);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const c = { ...defaultColors, ...colors };
   const selectedCountry = countryCodes.find(c => c.code === countryCode)!;
@@ -179,13 +187,14 @@ export function NewsletterForm({ className, colors = {} }: NewsletterFormProps) 
         </div>
 
         {/* Turnstile */}
-        <div className="flex justify-center overflow-hidden">
+        <div className="w-full flex justify-center">
           <Turnstile
             ref={turnstileRef}
             onVerify={setTurnstileToken}
             onError={() => setError('Error en verificación anti-bot')}
             onExpire={() => setTurnstileToken('')}
-            size="flexible"
+            size={isSmallScreen ? 'compact' : 'normal'}
+            theme="light"
           />
         </div>
 

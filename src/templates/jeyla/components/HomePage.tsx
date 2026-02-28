@@ -501,7 +501,7 @@ export function HomePage({
       {/* Newsletter Section */}
       {showNewsletter && (
         <section
-          className="py-20 px-4 relative overflow-hidden"
+          className="py-20 px-2 sm:px-4 relative overflow-hidden"
           style={{
             background: `linear-gradient(135deg, ${pastelPink}90 0%, ${pastelPeach}70 50%, ${pastelMint}60 100%)`
           }}
@@ -522,13 +522,13 @@ export function HomePage({
 
           <div className="container mx-auto max-w-4xl relative z-10">
             <div
-              className="rounded-2xl sm:rounded-[2rem] p-4 sm:p-8 md:p-12 backdrop-blur-md"
+              className="rounded-2xl sm:rounded-[2rem] p-3 sm:p-8 md:p-12 backdrop-blur-md"
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.85)',
                 boxShadow: `0 25px 50px -12px ${pastelPink}50, 0 0 0 1px rgba(255,255,255,0.5)`
               }}
             >
-              <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+              <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center min-w-0 [&>*]:min-w-0">
                 {/* Left side - Content */}
                 <div className="text-center md:text-left">
                   <div
@@ -578,7 +578,7 @@ export function HomePage({
 
                 {/* Right side - Form */}
                 <div
-                  className="rounded-2xl p-4 sm:p-6 md:p-8"
+                  className="rounded-2xl p-3 sm:p-6 md:p-8"
                   style={{
                     backgroundColor: `${pastelPeach}30`,
                     border: `1px solid ${pastelPeach}60`

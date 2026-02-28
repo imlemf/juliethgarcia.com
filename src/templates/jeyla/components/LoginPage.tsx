@@ -168,6 +168,7 @@ export function LoginPage({ config }: LoginPageProps) {
                 onVerify={setTurnstileToken}
                 onError={() => setError('Error en verificación anti-bot')}
                 onExpire={() => setTurnstileToken('')}
+                theme="light"
               />
             </div>
 

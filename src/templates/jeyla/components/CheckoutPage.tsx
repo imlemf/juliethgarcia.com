@@ -542,6 +542,7 @@ export function CheckoutPage({ config, product, isAuthenticated, isPremium }: Ch
                   onVerify={(token) => setTurnstileToken(token)}
                   onError={() => setTurnstileToken(null)}
                   onExpire={() => setTurnstileToken(null)}
+                  theme="light"
                 />
               </div>
 
