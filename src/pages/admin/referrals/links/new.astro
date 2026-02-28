@@ -1,0 +1,19 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { ReferralLinkForm } from '@/components/admin/referral-link-form';
+
+const title = 'Nuevo Link Referido - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div>
+      <h1 class="text-3xl font-bold">Nuevo Link</h1>
+      <p class="text-muted-foreground mt-2">
+        Crea un nuevo link de afiliado con tracking
+      </p>
+    </div>
+
+    <ReferralLinkForm client:load />
+  </div>
+</AdminLayout>

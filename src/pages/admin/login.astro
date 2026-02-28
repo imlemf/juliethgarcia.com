@@ -1,0 +1,23 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { LoginForm } from '@/components/auth/login-form';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+const title = 'Admin - Iniciar Sesión';
+---
+
+<Layout title={title}>
+  <div class="flex min-h-screen items-center justify-center p-4">
+    <Card className="w-full max-w-md">
+      <CardHeader>
+        <CardTitle>Panel de Administración</CardTitle>
+        <CardDescription>
+          Inicia sesión para acceder al panel de administración
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <LoginForm client:load redirectTo="/admin/dashboard" />
+      </CardContent>
+    </Card>
+  </div>
+</Layout>

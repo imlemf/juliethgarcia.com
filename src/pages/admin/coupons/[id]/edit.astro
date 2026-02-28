@@ -1,0 +1,20 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { CouponForm } from '@/components/admin/coupon-form';
+
+const { id } = Astro.params;
+const title = 'Editar Cupón - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div>
+      <h1 class="text-3xl font-bold">Editar Cupón</h1>
+      <p class="text-muted-foreground mt-2">
+        Modifica los datos del cupón
+      </p>
+    </div>
+
+    <CouponForm couponId={id} client:load />
+  </div>
+</AdminLayout>

@@ -1,0 +1,19 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { UsersTable } from '@/components/admin/users-table';
+
+const title = 'Usuarios - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div>
+      <h1 class="text-3xl font-bold">Usuarios</h1>
+      <p class="text-muted-foreground mt-2">
+        Gestiona los usuarios registrados
+      </p>
+    </div>
+
+    <UsersTable client:load />
+  </div>
+</AdminLayout>

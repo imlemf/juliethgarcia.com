@@ -1,0 +1,33 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getDb } from '@/lib/db';
+import { getPublicPersonBySlug } from '@/lib/db/queries/people';
+import { PersonProfile } from '@/components/personas/person-profile';
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/personas');
+}
+
+const db = getDb(Astro.locals.runtime);
+const person = await getPublicPersonBySlug(db, slug);
+
+if (!person) {
+  return Astro.redirect('/personas');
+}
+
+const title = `${person.name} - Personas`;
+---
+
+<Layout title={title}>
+  <div class="container mx-auto px-4 py-8">
+    <nav class="mb-6">
+      <a href="/personas" class="text-sm text-muted-foreground hover:text-foreground transition-colors">
+        &larr; Volver a personas
+      </a>
+    </nav>
+
+    <PersonProfile person={person} client:load />
+  </div>
+</Layout>

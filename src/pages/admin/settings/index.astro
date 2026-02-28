@@ -1,0 +1,19 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { SettingsForm } from '@/components/admin/settings-form';
+
+const title = 'Configuración - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="max-w-4xl mx-auto space-y-6">
+    <div>
+      <h1 class="text-3xl font-bold">Configuración del Sitio</h1>
+      <p class="text-muted-foreground mt-2">
+        Configura las opciones generales, formato de fechas, SEO y comercio
+      </p>
+    </div>
+
+    <SettingsForm client:load />
+  </div>
+</AdminLayout>

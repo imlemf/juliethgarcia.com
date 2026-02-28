@@ -1,0 +1,19 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { BlogForm } from '@/components/admin/blog-form';
+
+const title = 'Nuevo Artículo - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div>
+      <h1 class="text-3xl font-bold">Nuevo Artículo</h1>
+      <p class="text-muted-foreground mt-2">
+        Escribe un nuevo artículo para tu blog
+      </p>
+    </div>
+
+    <BlogForm client:load />
+  </div>
+</AdminLayout>

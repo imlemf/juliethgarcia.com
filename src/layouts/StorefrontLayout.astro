@@ -1,0 +1,76 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+import '@/styles/globals.css';
+import { getDb } from '@/lib/db';
+import { getSettingValue } from '@/lib/db/queries/settings';
+import { getTemplateConfigObject } from '@/lib/db/queries/template-configs';
+import { Storefront } from '@/components/storefront/Storefront';
+
+interface Props {
+  title: string;
+  description?: string;
+  page: string;
+  pageProps?: Record<string, unknown>;
+}
+
+const { title, description = 'Plataforma de contenido fitness y bienestar', page, pageProps = {} } = Astro.props;
+
+// Get database client
+const db = getDb(Astro.locals.runtime);
+
+// Get active template
+const templateId = await getSettingValue<string>(db, 'template.active') || 'jeyla';
+
+// Get template configuration
+const templateConfig = await getTemplateConfigObject(db, templateId);
+
+// Get site name for header/footer
+const siteName = await getSettingValue<string>(db, 'site.name') || 'Jeyla';
+
+// Check if user is authenticated and premium status
+const isAuthenticated = !!Astro.locals.user;
+const premiumUntilDate = Astro.locals.user?.premiumUntil
+  ? (Astro.locals.user.premiumUntil instanceof Date
+      ? Astro.locals.user.premiumUntil
+      : new Date(Astro.locals.user.premiumUntil))
+  : null;
+const isPremium = premiumUntilDate ? premiumUntilDate > new Date() : false;
+const user = Astro.locals.user ? {
+  name: Astro.locals.user.name || Astro.locals.user.email?.split('@')[0] || 'Usuario',
+  email: Astro.locals.user.email || '',
+  role: Astro.locals.user.role || 'user',
+  isPremium,
+  premiumUntil: premiumUntilDate ? premiumUntilDate.toISOString() : null,
+} : null;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <ViewTransitions />
+    <!-- Google Fonts for template fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="font-sans antialiased bg-white text-gray-900">
+    <Storefront
+      client:load
+      templateId={templateId}
+      templateConfig={templateConfig}
+      page={page}
+      pageProps={pageProps}
+      siteName={siteName}
+      isAuthenticated={isAuthenticated}
+      user={user}
+    />
+  </body>
+</html>

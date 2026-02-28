@@ -1,0 +1,52 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { Icon } from 'astro-icon/components';
+import { PeopleTable } from '@/components/admin/people-table';
+
+const title = 'Personas - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold">Personas</h1>
+        <p class="text-muted-foreground mt-2">
+          Gestiona las personas del equipo
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <a
+          href="/admin/people/categories"
+          class="inline-flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
+        >
+          <Icon name="lucide:folder" class="h-4 w-4" />
+          Categorías
+        </a>
+        <a
+          href="/admin/people/titles"
+          class="inline-flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
+        >
+          <Icon name="lucide:briefcase" class="h-4 w-4" />
+          Títulos
+        </a>
+        <a
+          href="/admin/people/skills"
+          class="inline-flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
+        >
+          <Icon name="lucide:star" class="h-4 w-4" />
+          Skills
+        </a>
+        <a
+          href="/admin/people/new"
+          class="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+        >
+          <Icon name="lucide:plus" class="h-4 w-4" />
+          Nueva persona
+        </a>
+      </div>
+    </div>
+
+    <PeopleTable client:load />
+  </div>
+</AdminLayout>

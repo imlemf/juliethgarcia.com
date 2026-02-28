@@ -1,0 +1,248 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { getDb } from '@/lib/db';
+import { purchases, products, users, downloadLinks } from '@/db/schema';
+import { eq } from 'drizzle-orm';
+import { formatCurrency } from '@/lib/utils/format-currency';
+
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect('/admin/purchases');
+}
+
+const db = getDb(Astro.locals.runtime);
+
+const [purchase] = await db
+  .select({
+    id: purchases.id,
+    email: purchases.email,
+    purchaseCode: purchases.purchaseCode,
+    amount: purchases.amount,
+    currency: purchases.currency,
+    status: purchases.status,
+    paymentProvider: purchases.paymentProvider,
+    externalPaymentId: purchases.externalPaymentId,
+    externalOrderId: purchases.externalOrderId,
+    providerStatus: purchases.providerStatus,
+    providerStatusDetail: purchases.providerStatusDetail,
+    checkoutUrl: purchases.checkoutUrl,
+    usedForRegistration: purchases.usedForRegistration,
+    registrationUsedAt: purchases.registrationUsedAt,
+    createdAt: purchases.createdAt,
+    updatedAt: purchases.updatedAt,
+    productId: purchases.productId,
+    productName: products.name,
+    productSlug: products.slug,
+    userId: purchases.userId,
+    userName: users.name,
+    userEmail: users.email,
+  })
+  .from(purchases)
+  .leftJoin(products, eq(purchases.productId, products.id))
+  .leftJoin(users, eq(purchases.userId, users.id))
+  .where(eq(purchases.id, id))
+  .limit(1);
+
+if (!purchase) {
+  return Astro.redirect('/admin/purchases');
+}
+
+const links = await db
+  .select({
+    id: downloadLinks.id,
+    token: downloadLinks.token,
+    downloadCount: downloadLinks.downloadCount,
+    maxDownloads: downloadLinks.maxDownloads,
+    expiresAt: downloadLinks.expiresAt,
+    createdAt: downloadLinks.createdAt,
+  })
+  .from(downloadLinks)
+  .where(eq(downloadLinks.purchaseId, id));
+
+const title = `Compra ${purchase.purchaseCode} - Admin`;
+
+const statusLabels: Record<string, string> = {
+  initialized: 'Inicializada',
+  pending: 'Pendiente',
+  completed: 'Completada',
+  refunded: 'Reembolsada',
+  failed: 'Fallida',
+};
+
+const statusColors: Record<string, string> = {
+  initialized: 'bg-blue-500/10 text-blue-600 dark:text-blue-400',
+  pending: 'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400',
+  completed: 'bg-green-500/10 text-green-600 dark:text-green-400',
+  refunded: 'bg-muted text-muted-foreground',
+  failed: 'bg-red-500/10 text-red-600 dark:text-red-400',
+};
+---
+
+<AdminLayout title={title}>
+  <div class="max-w-4xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold">Detalle de Compra</h1>
+        <p class="text-muted-foreground mt-2">
+          Código: <code class="bg-muted px-2 py-1 rounded font-mono">{purchase.purchaseCode}</code>
+        </p>
+      </div>
+      <span class={`text-sm px-3 py-1 rounded-full ${statusColors[purchase.status]}`}>
+        {statusLabels[purchase.status]}
+      </span>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      <Card>
+        <CardHeader>
+          <CardTitle>Información General</CardTitle>
+        </CardHeader>
+        <CardContent class="space-y-4">
+          <div class="grid grid-cols-2 gap-2 text-sm">
+            <span class="text-muted-foreground">Email:</span>
+            <span>{purchase.email}</span>
+
+            <span class="text-muted-foreground">Monto:</span>
+            <span class="font-semibold">{formatCurrency(purchase.amount / 100, purchase.currency)}</span>
+
+            <span class="text-muted-foreground">Fecha:</span>
+            <span>{purchase.createdAt ? new Date(purchase.createdAt).toLocaleString('es-CO') : '—'}</span>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Producto</CardTitle>
+        </CardHeader>
+        <CardContent class="space-y-4">
+          <div class="grid grid-cols-2 gap-2 text-sm">
+            <span class="text-muted-foreground">Nombre:</span>
+            <span>{purchase.productName || '—'}</span>
+
+            <span class="text-muted-foreground">Slug:</span>
+            <span>{purchase.productSlug || '—'}</span>
+
+            {purchase.productId && (
+              <>
+                <span class="text-muted-foreground">Ver:</span>
+                <a href={`/products/${purchase.productSlug}`} class="text-primary hover:underline">
+                  Ir al producto →
+                </a>
+              </>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Proveedor de Pago</CardTitle>
+        </CardHeader>
+        <CardContent class="space-y-4">
+          <div class="grid grid-cols-2 gap-2 text-sm">
+            <span class="text-muted-foreground">Proveedor:</span>
+            <span class="capitalize">{purchase.paymentProvider || '—'}</span>
+
+            <span class="text-muted-foreground">Payment ID:</span>
+            <span class="font-mono text-xs">{purchase.externalPaymentId || '—'}</span>
+
+            <span class="text-muted-foreground">Order ID:</span>
+            <span class="font-mono text-xs">{purchase.externalOrderId || '—'}</span>
+
+            <span class="text-muted-foreground">Estado:</span>
+            <span>{purchase.providerStatus || '—'}</span>
+
+            <span class="text-muted-foreground">Detalle:</span>
+            <span>{purchase.providerStatusDetail || '—'}</span>
+
+            {purchase.checkoutUrl && (
+              <>
+                <span class="text-muted-foreground">Checkout URL:</span>
+                <a href={purchase.checkoutUrl} target="_blank" rel="noopener noreferrer" class="text-primary hover:underline text-xs truncate">
+                  Ver checkout →
+                </a>
+              </>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Usuario Registrado</CardTitle>
+        </CardHeader>
+        <CardContent class="space-y-4">
+          {purchase.userId ? (
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              <span class="text-muted-foreground">Nombre:</span>
+              <span>{purchase.userName || '—'}</span>
+
+              <span class="text-muted-foreground">Email:</span>
+              <span>{purchase.userEmail}</span>
+
+              <span class="text-muted-foreground">Registrado:</span>
+              <span>{purchase.registrationUsedAt ? new Date(purchase.registrationUsedAt).toLocaleString('es-CO') : '—'}</span>
+
+              <span class="text-muted-foreground">Ver:</span>
+              <a href={`/admin/users/${purchase.userId}/edit`} class="text-primary hover:underline">
+                Ir al usuario →
+              </a>
+            </div>
+          ) : (
+            <p class="text-sm text-muted-foreground">
+              {purchase.usedForRegistration
+                ? 'El código fue usado pero el usuario ya no existe'
+                : 'Este código aún no ha sido usado para registro'}
+            </p>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+
+    {links.length > 0 && (
+      <Card>
+        <CardHeader>
+          <CardTitle>Links de Descarga</CardTitle>
+          <CardDescription>
+            Enlaces generados para esta compra
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div class="space-y-4">
+            {links.map((link) => (
+              <div class="flex items-center justify-between p-4 bg-muted rounded-lg">
+                <div class="space-y-1">
+                  <code class="text-xs font-mono">{link.token}</code>
+                  <div class="flex gap-4 text-xs text-muted-foreground">
+                    <span>Descargas: {link.downloadCount}/{link.maxDownloads}</span>
+                    <span>Expira: {new Date(link.expiresAt).toLocaleString('es-CO')}</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  {link.downloadCount > 0 ? (
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-green-500/10 text-green-600 dark:text-green-400">
+                      Descargado
+                    </span>
+                  ) : (
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
+                      Sin descargar
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    )}
+
+    <div class="flex gap-4">
+      <a href="/admin/purchases" class="text-sm text-muted-foreground hover:text-foreground">
+        ← Volver a compras
+      </a>
+    </div>
+  </div>
+</AdminLayout>

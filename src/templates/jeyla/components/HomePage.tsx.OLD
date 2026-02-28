@@ -1,0 +1,93 @@
+import type { HomePageProps } from '../../types';
+import { ProductCard } from './ProductCard';
+import { RecipeCard } from './RecipeCard';
+import { BlogCard } from './BlogCard';
+
+export function HomePage({
+  config,
+  featuredProduct,
+  recentRecipes = [],
+  recentBlogs = [],
+}: HomePageProps) {
+  const heroTitle = (config.heroTitle as string) || 'Bienvenida';
+  const heroSubtitle = (config.heroSubtitle as string) || 'Tu espacio de bienestar y fitness';
+  const showRecipes = config.showRecipesOnHome !== false;
+  const showBlog = config.showBlogOnHome !== false;
+
+  return (
+    <div>
+      {/* Hero Section */}
+      <section className="py-16 px-4 bg-gradient-to-b from-gray-50 to-white">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">{heroTitle}</h1>
+          <p className="text-xl text-gray-600 mb-8">{heroSubtitle}</p>
+
+          {featuredProduct && (
+            <div className="max-w-sm mx-auto">
+              <ProductCard product={featuredProduct} />
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Recipes Section */}
+      {showRecipes && recentRecipes.length > 0 && (
+        <section className="py-16 px-4">
+          <div className="container mx-auto">
+            <h2 className="text-3xl font-bold text-center mb-8">Recetas Recientes</h2>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {recentRecipes.map((recipe) => (
+                <RecipeCard
+                  key={recipe.id}
+                  recipe={{
+                    ...recipe,
+                    calories: null,
+                    servings: 1,
+                    categoryName: null,
+                  }}
+                />
+              ))}
+            </div>
+            <div className="text-center mt-8">
+              <a
+                href="/recipes"
+                className="inline-block px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+              >
+                Ver todas las recetas
+              </a>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Blog Section */}
+      {showBlog && recentBlogs.length > 0 && (
+        <section className="py-16 px-4 bg-gray-50">
+          <div className="container mx-auto">
+            <h2 className="text-3xl font-bold text-center mb-8">Últimos Artículos</h2>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {recentBlogs.map((blog) => (
+                <BlogCard
+                  key={blog.id}
+                  blog={{
+                    ...blog,
+                    categoryName: null,
+                    categorySlug: null,
+                  }}
+                />
+              ))}
+            </div>
+            <div className="text-center mt-8">
+              <a
+                href="/blog"
+                className="inline-block px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+              >
+                Ver todos los artículos
+              </a>
+            </div>
+          </div>
+        </section>
+      )}
+    </div>
+  );
+}

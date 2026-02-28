@@ -1,0 +1,29 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { Icon } from 'astro-icon/components';
+import { ProductsTable } from '@/components/admin/products-table';
+
+const title = 'Productos - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold">Productos</h1>
+        <p class="text-muted-foreground mt-2">
+          Gestiona tus productos digitales
+        </p>
+      </div>
+      <a
+        href="/admin/products/new"
+        class="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+      >
+        <Icon name="lucide:plus" class="h-4 w-4" />
+        Nuevo producto
+      </a>
+    </div>
+
+    <ProductsTable client:load />
+  </div>
+</AdminLayout>

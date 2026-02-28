@@ -1,0 +1,65 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { UserForm } from '@/components/admin/user-form';
+import { getDb } from '@/lib/db';
+import { users } from '@/db/schema';
+import { eq } from 'drizzle-orm';
+
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect('/admin/users');
+}
+
+const db = getDb(Astro.locals.runtime);
+
+const [user] = await db.select({
+  id: users.id,
+  name: users.name,
+  email: users.email,
+  role: users.role,
+  isActive: users.isActive,
+  premiumUntil: users.premiumUntil,
+}).from(users).where(eq(users.id, id)).limit(1);
+
+if (!user) {
+  return Astro.redirect('/admin/users');
+}
+
+const title = `Editar ${user.name || user.email} - Admin`;
+---
+
+<AdminLayout title={title}>
+  <div class="max-w-2xl mx-auto space-y-6">
+    <div>
+      <h1 class="text-3xl font-bold">Editar Usuario</h1>
+      <p class="text-muted-foreground mt-2">
+        Modifica la información del usuario
+      </p>
+    </div>
+
+    <Card>
+      <CardHeader>
+        <CardTitle>Información del usuario</CardTitle>
+        <CardDescription>
+          Actualiza los datos del usuario
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <UserForm
+          client:load
+          mode="edit"
+          initialData={{
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            isActive: user.isActive,
+            premiumUntil: user.premiumUntil ? user.premiumUntil.toISOString() : null,
+          }}
+        />
+      </CardContent>
+    </Card>
+  </div>
+</AdminLayout>

@@ -1,0 +1,28 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { Icon } from 'astro-icon/components';
+import { PersonTitleForm } from '@/components/admin/person-title-form';
+
+const title = 'Nuevo título - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div class="flex items-center gap-4">
+      <a
+        href="/admin/people/titles"
+        class="inline-flex items-center justify-center rounded-md border h-10 w-10 hover:bg-muted transition-colors"
+      >
+        <Icon name="lucide:arrow-left" class="h-4 w-4" />
+      </a>
+      <div>
+        <h1 class="text-3xl font-bold">Nuevo título</h1>
+        <p class="text-muted-foreground mt-1">
+          Crea un nuevo título profesional
+        </p>
+      </div>
+    </div>
+
+    <PersonTitleForm client:load />
+  </div>
+</AdminLayout>

@@ -1,0 +1,30 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { BlogCategoryForm } from '@/components/admin/blog-category-form';
+
+const title = 'Nueva Categoría - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="max-w-xl mx-auto space-y-6">
+    <div>
+      <h1 class="text-3xl font-bold">Nueva Categoría</h1>
+      <p class="text-muted-foreground mt-2">
+        Crea una nueva categoría para organizar tus artículos
+      </p>
+    </div>
+
+    <Card client:load>
+      <CardHeader>
+        <CardTitle>Información de la categoría</CardTitle>
+        <CardDescription>
+          Las categorías te ayudan a organizar el contenido de tu blog
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <BlogCategoryForm client:load />
+      </CardContent>
+    </Card>
+  </div>
+</AdminLayout>

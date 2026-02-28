@@ -1,0 +1,29 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { Icon } from 'astro-icon/components';
+import { CouponsTable } from '@/components/admin/coupons-table';
+
+const title = 'Cupones - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold">Cupones</h1>
+        <p class="text-muted-foreground mt-2">
+          Gestiona los cupones de descuento para tus productos
+        </p>
+      </div>
+      <a
+        href="/admin/coupons/new"
+        class="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+      >
+        <Icon name="lucide:plus" class="h-4 w-4" />
+        Nuevo cupón
+      </a>
+    </div>
+
+    <CouponsTable client:load />
+  </div>
+</AdminLayout>

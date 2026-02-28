@@ -1,0 +1,32 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { AuthRequiredTabs } from '@/components/auth/auth-required-tabs';
+
+const title = 'Autenticación Requerida';
+const user = Astro.locals.user;
+const token = Astro.url.searchParams.get('token');
+
+// If already authenticated and has token, redirect to download
+if (user && token) {
+  return Astro.redirect(`/downloads/${token}`);
+}
+
+// If authenticated but no token, redirect to dashboard
+if (user) {
+  return Astro.redirect('/dashboard');
+}
+
+const redirectTo = token ? `/downloads/${token}` : '/dashboard';
+---
+
+<Layout title={title}>
+  <div class="container mx-auto px-4 py-12">
+    <div class="max-w-md mx-auto">
+      <AuthRequiredTabs client:only="react" redirectTo={redirectTo} />
+
+      <p class="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
+        ¿No encuentras tu código de compra? Revisa tu email o contacta con soporte.
+      </p>
+    </div>
+  </div>
+</Layout>

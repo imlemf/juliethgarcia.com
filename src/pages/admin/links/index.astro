@@ -1,0 +1,29 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { Icon } from 'astro-icon/components';
+import { LinksTable } from '@/components/admin/links-table';
+
+const title = 'Enlaces - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold">Enlaces</h1>
+        <p class="text-muted-foreground mt-2">
+          Gestiona los enlaces de tu página tipo Linktree
+        </p>
+      </div>
+      <a
+        href="/admin/links/new"
+        class="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+      >
+        <Icon name="lucide:plus" class="h-4 w-4" />
+        Nuevo enlace
+      </a>
+    </div>
+
+    <LinksTable client:load />
+  </div>
+</AdminLayout>

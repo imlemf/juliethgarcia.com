@@ -1,0 +1,86 @@
+---
+import StorefrontLayout from '@/layouts/StorefrontLayout.astro';
+import { getDb } from '@/lib/db';
+import { getSettingValue } from '@/lib/db/queries/settings';
+import { findTemplateRoute } from '@/templates';
+import { fetchPageData } from '@/templates/data-fetcher';
+import { isPremiumUser } from '@/lib/db/queries/users';
+
+// Get the path from params
+const pathSegments = Astro.params.path;
+const path = '/' + (pathSegments || '');
+
+// Excluded paths - these should not be handled by the template router
+const excludedPrefixes = ['/admin', '/api', '/logout', '/auth', '/downloads', '/r/'];
+const isExcluded = excludedPrefixes.some((prefix) => path.startsWith(prefix));
+
+if (isExcluded) {
+  // Let Astro handle these routes normally (404 if no matching file)
+  return Astro.redirect('/404');
+}
+
+const db = getDb(Astro.locals.runtime);
+
+// Get active template
+const templateId = (await getSettingValue<string>(db, 'template.active')) || 'jeyla';
+
+// Find the route in the template (now returns { route, params } or null)
+const matchedRoute = findTemplateRoute(templateId, path);
+
+// If route not found, return 404
+if (!matchedRoute) {
+  return Astro.redirect('/404');
+}
+
+const { route, params } = matchedRoute;
+
+// Check authentication and premium status
+const isAuthenticated = !!Astro.locals.user;
+const isPremium = isPremiumUser(Astro.locals.user);
+
+// Build route params including searchParams for checkout result
+const routeParams = {
+  ...params,
+  searchParams: Astro.url.searchParams,
+};
+
+// Fetch data for this page, passing route params (e.g., slug)
+const pageData = await fetchPageData(
+  route.page,
+  db,
+  templateId,
+  {
+    isAuthenticated,
+    isPremium,
+    userId: Astro.locals.user?.id,
+    userEmail: Astro.locals.user?.email,
+  },
+  routeParams
+);
+
+// For recipe detail, check if recipe was found
+if (route.page === 'recipeDetail' && !pageData.recipe) {
+  return Astro.redirect('/recipes');
+}
+
+// For blog detail, check if blog was found
+if (route.page === 'blogDetail' && !pageData.blog) {
+  return Astro.redirect('/blog');
+}
+
+// Dynamic title for detail pages
+let title = route.title;
+if (route.page === 'recipeDetail' && pageData.recipe) {
+  title = (pageData.recipe as { name: string }).name;
+}
+if (route.page === 'blogDetail' && pageData.blog) {
+  title = (pageData.blog as { title: string }).title;
+}
+---
+
+<StorefrontLayout
+  title={title}
+  description={route.description}
+  page={route.page}
+  pageProps={pageData}
+/>

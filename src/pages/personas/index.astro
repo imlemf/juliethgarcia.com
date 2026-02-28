@@ -1,0 +1,170 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getDb } from '@/lib/db';
+import { getAllPublicPeople } from '@/lib/db/queries/people';
+import { getAllPersonCategories } from '@/lib/db/queries/person-categories';
+import { getAllSkills } from '@/lib/db/queries/skills';
+import { PersonCard } from '@/components/personas/person-card';
+
+const title = 'Personas';
+
+const db = getDb(Astro.locals.runtime);
+const people = await getAllPublicPeople(db);
+const categories = await getAllPersonCategories(db, true);
+const skills = await getAllSkills(db, true);
+
+// Get filters from URL params
+const url = new URL(Astro.request.url);
+const selectedCategory = url.searchParams.get('categoria');
+const selectedSkill = url.searchParams.get('skill');
+
+// Filter people
+let filteredPeople = people;
+
+if (selectedCategory) {
+  filteredPeople = filteredPeople.filter((p) => p.categorySlug === selectedCategory);
+}
+
+if (selectedSkill) {
+  filteredPeople = filteredPeople.filter((p) =>
+    p.skills.some((s) => s.skillSlug === selectedSkill)
+  );
+}
+
+const selectedCategoryName = selectedCategory
+  ? categories.find((c) => c.slug === selectedCategory)?.name
+  : null;
+
+const selectedSkillName = selectedSkill
+  ? skills.find((s) => s.slug === selectedSkill)?.name
+  : null;
+
+// Build title
+let pageTitle = 'Personas';
+if (selectedCategoryName && selectedSkillName) {
+  pageTitle = `${selectedCategoryName} con ${selectedSkillName}`;
+} else if (selectedCategoryName) {
+  pageTitle = selectedCategoryName;
+} else if (selectedSkillName) {
+  pageTitle = `Personas con ${selectedSkillName}`;
+}
+---
+
+<Layout title={title}>
+  <div class="container mx-auto px-4 py-8">
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold mb-2">{pageTitle}</h1>
+      <p class="text-muted-foreground">
+        {filteredPeople.length === people.length
+          ? `${people.length} personas`
+          : `${filteredPeople.length} de ${people.length} personas`}
+      </p>
+    </div>
+
+    {/* Category filter */}
+    {categories.length > 0 && (
+      <div class="mb-4">
+        <h3 class="text-sm font-medium text-muted-foreground mb-2">Categorías</h3>
+        <div class="flex flex-wrap gap-2">
+          <a
+            href={selectedSkill ? `/personas?skill=${selectedSkill}` : '/personas'}
+            class:list={[
+              'px-4 py-2 rounded-full text-sm font-medium transition-colors',
+              !selectedCategory
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-muted hover:bg-muted/80',
+            ]}
+          >
+            Todas
+          </a>
+          {categories.map((cat) => (
+            <a
+              href={selectedSkill
+                ? `/personas?categoria=${cat.slug}&skill=${selectedSkill}`
+                : `/personas?categoria=${cat.slug}`}
+              class:list={[
+                'px-4 py-2 rounded-full text-sm font-medium transition-colors',
+                selectedCategory === cat.slug
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted hover:bg-muted/80',
+              ]}
+            >
+              {cat.name}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {/* Skills filter */}
+    {skills.length > 0 && (
+      <div class="mb-8">
+        <h3 class="text-sm font-medium text-muted-foreground mb-2">Skills</h3>
+        <div class="flex flex-wrap gap-2">
+          <a
+            href={selectedCategory ? `/personas?categoria=${selectedCategory}` : '/personas'}
+            class:list={[
+              'px-3 py-1 rounded-full text-xs font-medium transition-colors',
+              !selectedSkill
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-muted hover:bg-muted/80',
+            ]}
+          >
+            Todos
+          </a>
+          {skills.map((skill) => (
+            <a
+              href={selectedCategory
+                ? `/personas?categoria=${selectedCategory}&skill=${skill.slug}`
+                : `/personas?skill=${skill.slug}`}
+              class:list={[
+                'px-3 py-1 rounded-full text-xs font-medium transition-colors',
+                selectedSkill === skill.slug
+                  ? 'text-white'
+                  : 'hover:opacity-80',
+              ]}
+              style={selectedSkill === skill.slug
+                ? { backgroundColor: skill.color || 'hsl(var(--primary))' }
+                : {
+                    backgroundColor: skill.color ? `${skill.color}20` : 'hsl(var(--muted))',
+                    color: skill.color || 'hsl(var(--muted-foreground))',
+                  }}
+            >
+              {skill.name}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {/* People grid */}
+    {filteredPeople.length > 0 ? (
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {filteredPeople.map((person) => (
+          <PersonCard
+            name={person.name}
+            slug={person.slug}
+            shortBio={person.shortBio}
+            avatarUrl={person.avatarUrl}
+            titleName={person.titleName}
+            categoryName={person.categoryName}
+            skills={person.skills}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-12">
+        <p class="text-muted-foreground">
+          {selectedCategory || selectedSkill
+            ? 'No hay personas con estos filtros.'
+            : 'No hay personas disponibles todavía.'}
+        </p>
+        {(selectedCategory || selectedSkill) && (
+          <a href="/personas" class="text-primary hover:underline mt-2 inline-block">
+            Ver todas las personas
+          </a>
+        )}
+      </div>
+    )}
+  </div>
+</Layout>

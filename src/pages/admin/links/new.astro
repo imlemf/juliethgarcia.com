@@ -1,0 +1,30 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { LinkForm } from '@/components/site-links/link-form';
+
+const title = 'Nuevo Enlace - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="max-w-3xl mx-auto space-y-6">
+    <div>
+      <h1 class="text-3xl font-bold">Nuevo Enlace</h1>
+      <p class="text-muted-foreground mt-2">
+        Agrega un nuevo enlace a tu página
+      </p>
+    </div>
+
+    <Card client:load>
+      <CardHeader>
+        <CardTitle>Información del enlace</CardTitle>
+        <CardDescription>
+          Puedes usar plantillas de redes sociales o crear enlaces personalizados
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <LinkForm client:load mode="create" />
+      </CardContent>
+    </Card>
+  </div>
+</AdminLayout>

@@ -1,0 +1,107 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getDb } from '@/lib/db';
+import { getBlogsByCategory } from '@/lib/db/queries/blogs';
+import { getBlogCategoryBySlug, getAllBlogCategories } from '@/lib/db/queries/blog-categories';
+import { BlogCard } from '@/components/blog/blog-card';
+
+export async function getStaticPaths() {
+  return [];
+}
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/blog');
+}
+
+const db = getDb(Astro.locals.runtime);
+const category = await getBlogCategoryBySlug(db, slug);
+
+if (!category) {
+  return Astro.redirect('/blog');
+}
+
+const blogs = await getBlogsByCategory(db, category.id, true);
+const categories = await getAllBlogCategories(db, true);
+
+const title = `${category.name} - Blog`;
+const description = category.description || `Artículos sobre ${category.name}`;
+---
+
+<Layout title={title} description={description}>
+  <div class="min-h-screen">
+    <!-- Header -->
+    <header class="border-b">
+      <div class="container mx-auto px-4 py-6">
+        <div class="flex items-center justify-between">
+          <a href="/blog" class="text-xl font-bold">Blog</a>
+          <a href="/" class="text-sm text-muted-foreground hover:text-foreground">
+            ← Volver al inicio
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-12">
+      <div class="max-w-6xl mx-auto">
+        <!-- Title -->
+        <div class="text-center mb-12">
+          <h1 class="text-4xl font-bold mb-4">{category.name}</h1>
+          {category.description && (
+            <p class="text-muted-foreground text-lg">{category.description}</p>
+          )}
+        </div>
+
+        <!-- Categories Filter -->
+        <div class="flex flex-wrap gap-2 justify-center mb-12">
+          <a
+            href="/blog"
+            class="px-4 py-2 rounded-full text-sm font-medium bg-muted hover:bg-muted/80 transition-colors"
+          >
+            Todos
+          </a>
+          {categories.map((cat) => (
+            <a
+              href={`/blog/categoria/${cat.slug}`}
+              class:list={[
+                'px-4 py-2 rounded-full text-sm font-medium transition-colors',
+                cat.id === category.id
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted hover:bg-muted/80',
+              ]}
+            >
+              {cat.name}
+            </a>
+          ))}
+        </div>
+
+        <!-- Blog Grid -->
+        {blogs.length === 0 ? (
+          <div class="text-center py-16 text-muted-foreground">
+            <p class="text-lg">No hay artículos en esta categoría.</p>
+            <a href="/blog" class="text-primary hover:underline mt-4 inline-block">
+              Ver todos los artículos
+            </a>
+          </div>
+        ) : (
+          <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {blogs.map((blog) => (
+              <BlogCard
+                title={blog.title}
+                slug={blog.slug}
+                excerpt={blog.excerpt}
+                coverImage={blog.coverImage}
+                categoryName={blog.categoryName}
+                categorySlug={blog.categorySlug}
+                publishedAt={blog.publishedAt}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </main>
+  </div>
+</Layout>

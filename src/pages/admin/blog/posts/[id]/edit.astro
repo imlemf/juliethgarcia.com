@@ -1,0 +1,20 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { BlogForm } from '@/components/admin/blog-form';
+
+const title = 'Editar Artículo - Admin';
+const { id } = Astro.params;
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div>
+      <h1 class="text-3xl font-bold">Editar Artículo</h1>
+      <p class="text-muted-foreground mt-2">
+        Modifica el contenido de tu artículo
+      </p>
+    </div>
+
+    <BlogForm client:load blogId={id} />
+  </div>
+</AdminLayout>

@@ -1,0 +1,443 @@
+---
+import Layout from './Layout.astro';
+import { Icon } from 'astro-icon/components';
+import { getSetting } from '@/lib/settings';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+const user = Astro.locals.user;
+
+// Protect admin routes
+if (!user || user.role !== 'admin') {
+  return Astro.redirect('/');
+}
+
+const siteName = await getSetting(Astro.locals.runtime, 'site.name');
+---
+
+<Layout title={title}>
+  <div class="min-h-screen bg-background">
+    <div class="border-b bg-card">
+      <div class="container mx-auto px-4">
+        <div class="flex h-16 items-center justify-between">
+          <div class="flex items-center gap-6">
+            <a href="/admin/dashboard" class="font-bold text-lg">
+              {siteName}
+            </a>
+            <nav class="flex gap-4">
+              <div class="relative">
+                <button
+                  id="store-menu-btn"
+                  class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Icon name="lucide:store" class="h-4 w-4" />
+                  Tienda
+                  <Icon name="lucide:chevron-down" class="h-3 w-3" />
+                </button>
+                <div
+                  id="store-menu"
+                  class="hidden absolute left-0 top-full mt-2 w-40 rounded-md border bg-popover p-1 shadow-md z-50"
+                >
+                  <a
+                    href="/admin/products"
+                    class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  >
+                    <Icon name="lucide:package" class="h-4 w-4" />
+                    Productos
+                  </a>
+                  <a
+                    href="/admin/purchases"
+                    class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  >
+                    <Icon name="lucide:shopping-cart" class="h-4 w-4" />
+                    Compras
+                  </a>
+                  <a
+                    href="/admin/coupons"
+                    class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  >
+                    <Icon name="lucide:ticket" class="h-4 w-4" />
+                    Cupones
+                  </a>
+                  <a
+                    href="/admin/offers"
+                    class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  >
+                    <Icon name="lucide:percent" class="h-4 w-4" />
+                    Ofertas
+                  </a>
+                </div>
+              </div>
+              <a
+                href="/admin/links"
+                class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Icon name="lucide:link" class="h-4 w-4" />
+                Enlaces
+              </a>
+              <a
+                href="/admin/users"
+                class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Icon name="lucide:users" class="h-4 w-4" />
+                Usuarios
+              </a>
+              <a
+                href="/admin/newsletter"
+                class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Icon name="lucide:mail" class="h-4 w-4" />
+                Newsletter
+              </a>
+              <div class="relative">
+                <button
+                  id="blog-menu-btn"
+                  class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Icon name="lucide:file-text" class="h-4 w-4" />
+                  Blog
+                  <Icon name="lucide:chevron-down" class="h-3 w-3" />
+                </button>
+                <div
+                  id="blog-menu"
+                  class="hidden absolute left-0 top-full mt-2 w-40 rounded-md border bg-popover p-1 shadow-md z-50"
+                >
+                  <a
+                    href="/admin/blog/posts"
+                    class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  >
+                    <Icon name="lucide:file-text" class="h-4 w-4" />
+                    Artículos
+                  </a>
+                  <a
+                    href="/admin/blog/categories"
+                    class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  >
+                    <Icon name="lucide:folder" class="h-4 w-4" />
+                    Categorías
+                  </a>
+                </div>
+              </div>
+              <div class="relative">
+                <button
+                  id="recipes-menu-btn"
+                  class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Icon name="lucide:chef-hat" class="h-4 w-4" />
+                  Recetas
+                  <Icon name="lucide:chevron-down" class="h-3 w-3" />
+                </button>
+                <div
+                  id="recipes-menu"
+                  class="hidden absolute left-0 top-full mt-2 w-40 rounded-md border bg-popover p-1 shadow-md z-50"
+                >
+                  <a
+                    href="/admin/recipes"
+                    class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  >
+                    <Icon name="lucide:book-open" class="h-4 w-4" />
+                    Recetas
+                  </a>
+                  <a
+                    href="/admin/recipes/categories"
+                    class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  >
+                    <Icon name="lucide:folder" class="h-4 w-4" />
+                    Categorías
+                  </a>
+                </div>
+              </div>
+              <div class="relative">
+                <button
+                  id="referrals-menu-btn"
+                  class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Icon name="lucide:external-link" class="h-4 w-4" />
+                  Referidos
+                  <Icon name="lucide:chevron-down" class="h-3 w-3" />
+                </button>
+                <div
+                  id="referrals-menu"
+                  class="hidden absolute left-0 top-full mt-2 w-40 rounded-md border bg-popover p-1 shadow-md z-50"
+                >
+                  <a
+                    href="/admin/referrals/links"
+                    class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  >
+                    <Icon name="lucide:link" class="h-4 w-4" />
+                    Links
+                  </a>
+                  <a
+                    href="/admin/referrals/categories"
+                    class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  >
+                    <Icon name="lucide:folder" class="h-4 w-4" />
+                    Categorías
+                  </a>
+                </div>
+              </div>
+              <div class="relative">
+                <button
+                  id="people-menu-btn"
+                  class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <Icon name="lucide:users-round" class="h-4 w-4" />
+                  Personas
+                  <Icon name="lucide:chevron-down" class="h-3 w-3" />
+                </button>
+                <div
+                  id="people-menu"
+                  class="hidden absolute left-0 top-full mt-2 w-40 rounded-md border bg-popover p-1 shadow-md z-50"
+                >
+                  <a
+                    href="/admin/people"
+                    class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  >
+                    <Icon name="lucide:user" class="h-4 w-4" />
+                    Personas
+                  </a>
+                  <a
+                    href="/admin/people/categories"
+                    class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  >
+                    <Icon name="lucide:folder" class="h-4 w-4" />
+                    Categorías
+                  </a>
+                  <a
+                    href="/admin/people/titles"
+                    class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  >
+                    <Icon name="lucide:briefcase" class="h-4 w-4" />
+                    Títulos
+                  </a>
+                  <a
+                    href="/admin/people/skills"
+                    class="flex items-center gap-2 rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                  >
+                    <Icon name="lucide:star" class="h-4 w-4" />
+                    Skills
+                  </a>
+                </div>
+              </div>
+              <a
+                href="/admin/template"
+                class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Icon name="lucide:palette" class="h-4 w-4" />
+                Plantilla
+              </a>
+              <a
+                href="/admin/settings"
+                class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Icon name="lucide:settings" class="h-4 w-4" />
+                Configuración
+              </a>
+            </nav>
+          </div>
+          <div class="flex items-center gap-4">
+            <a
+              href="/"
+              class="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Icon name="lucide:home" class="h-4 w-4" />
+              Ver sitio
+            </a>
+            <div class="relative">
+              <button
+                id="avatar-btn"
+                class="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
+              >
+                {(user.name || user.email).charAt(0).toUpperCase()}
+              </button>
+              <div
+                id="avatar-menu"
+                class="hidden absolute right-0 top-full mt-2 w-36 rounded-md border bg-popover p-1 shadow-md z-50"
+              >
+                <button
+                  id="logout-btn"
+                  class="flex w-full items-center gap-2 rounded-sm px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+                >
+                  <Icon name="lucide:log-out" class="h-4 w-4" />
+                  Salir
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container mx-auto px-4 py-8">
+      <slot />
+    </div>
+  </div>
+
+  <script is:inline>
+    function preventSamePageNavigation() {
+      const navLinks = document.querySelectorAll('nav a, .relative a');
+      navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          const href = link.getAttribute('href');
+          const currentPath = window.location.pathname;
+          if (href === currentPath || href === currentPath + '/') {
+            e.preventDefault();
+          }
+        });
+      });
+    }
+
+    function initAdminNav() {
+      const avatarBtn = document.getElementById('avatar-btn');
+      const avatarMenu = document.getElementById('avatar-menu');
+      const storeMenuBtn = document.getElementById('store-menu-btn');
+      const storeMenu = document.getElementById('store-menu');
+      const blogMenuBtn = document.getElementById('blog-menu-btn');
+      const blogMenu = document.getElementById('blog-menu');
+      const recipesMenuBtn = document.getElementById('recipes-menu-btn');
+      const recipesMenu = document.getElementById('recipes-menu');
+      const referralsMenuBtn = document.getElementById('referrals-menu-btn');
+      const referralsMenu = document.getElementById('referrals-menu');
+      const peopleMenuBtn = document.getElementById('people-menu-btn');
+      const peopleMenu = document.getElementById('people-menu');
+      const logoutBtn = document.getElementById('logout-btn');
+
+      function closeAllMenus() {
+        avatarMenu?.classList.add('hidden');
+        storeMenu?.classList.add('hidden');
+        blogMenu?.classList.add('hidden');
+        recipesMenu?.classList.add('hidden');
+        referralsMenu?.classList.add('hidden');
+        peopleMenu?.classList.add('hidden');
+      }
+
+      // Remove old listeners by cloning
+      if (avatarBtn) {
+        const newAvatarBtn = avatarBtn.cloneNode(true);
+        avatarBtn.parentNode?.replaceChild(newAvatarBtn, avatarBtn);
+        newAvatarBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isHidden = avatarMenu?.classList.contains('hidden');
+          closeAllMenus();
+          if (isHidden) avatarMenu?.classList.remove('hidden');
+        });
+      }
+
+      if (blogMenuBtn) {
+        const newBlogMenuBtn = blogMenuBtn.cloneNode(true);
+        blogMenuBtn.parentNode?.replaceChild(newBlogMenuBtn, blogMenuBtn);
+        newBlogMenuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isHidden = blogMenu?.classList.contains('hidden');
+          closeAllMenus();
+          if (isHidden) blogMenu?.classList.remove('hidden');
+        });
+      }
+
+      if (recipesMenuBtn) {
+        const newRecipesMenuBtn = recipesMenuBtn.cloneNode(true);
+        recipesMenuBtn.parentNode?.replaceChild(newRecipesMenuBtn, recipesMenuBtn);
+        newRecipesMenuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isHidden = recipesMenu?.classList.contains('hidden');
+          closeAllMenus();
+          if (isHidden) recipesMenu?.classList.remove('hidden');
+        });
+      }
+
+      if (referralsMenuBtn) {
+        const newReferralsMenuBtn = referralsMenuBtn.cloneNode(true);
+        referralsMenuBtn.parentNode?.replaceChild(newReferralsMenuBtn, referralsMenuBtn);
+        newReferralsMenuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isHidden = referralsMenu?.classList.contains('hidden');
+          closeAllMenus();
+          if (isHidden) referralsMenu?.classList.remove('hidden');
+        });
+      }
+
+      if (peopleMenuBtn) {
+        const newPeopleMenuBtn = peopleMenuBtn.cloneNode(true);
+        peopleMenuBtn.parentNode?.replaceChild(newPeopleMenuBtn, peopleMenuBtn);
+        newPeopleMenuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isHidden = peopleMenu?.classList.contains('hidden');
+          closeAllMenus();
+          if (isHidden) peopleMenu?.classList.remove('hidden');
+        });
+      }
+
+      if (storeMenuBtn) {
+        const newStoreMenuBtn = storeMenuBtn.cloneNode(true);
+        storeMenuBtn.parentNode?.replaceChild(newStoreMenuBtn, storeMenuBtn);
+        newStoreMenuBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isHidden = storeMenu?.classList.contains('hidden');
+          closeAllMenus();
+          if (isHidden) storeMenu?.classList.remove('hidden');
+        });
+      }
+
+      if (logoutBtn) {
+        const newLogoutBtn = logoutBtn.cloneNode(true);
+        logoutBtn.parentNode?.replaceChild(newLogoutBtn, logoutBtn);
+        newLogoutBtn.addEventListener('click', async () => {
+          try {
+            const res = await fetch('/api/auth/logout', { method: 'POST' });
+            if (res.ok) {
+              window.location.href = '/';
+            }
+          } catch (err) {
+            console.error('Error al cerrar sesión:', err);
+          }
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        const avatarBtn = document.getElementById('avatar-btn');
+        const avatarMenu = document.getElementById('avatar-menu');
+        const storeMenuBtn = document.getElementById('store-menu-btn');
+        const storeMenu = document.getElementById('store-menu');
+        const blogMenuBtn = document.getElementById('blog-menu-btn');
+        const blogMenu = document.getElementById('blog-menu');
+        const recipesMenuBtn = document.getElementById('recipes-menu-btn');
+        const recipesMenu = document.getElementById('recipes-menu');
+        const referralsMenuBtn = document.getElementById('referrals-menu-btn');
+        const referralsMenu = document.getElementById('referrals-menu');
+        const peopleMenuBtn = document.getElementById('people-menu-btn');
+        const peopleMenu = document.getElementById('people-menu');
+
+        if (avatarMenu && !avatarBtn?.contains(e.target) && !avatarMenu?.contains(e.target)) {
+          avatarMenu.classList.add('hidden');
+        }
+        if (storeMenu && !storeMenuBtn?.contains(e.target) && !storeMenu?.contains(e.target)) {
+          storeMenu.classList.add('hidden');
+        }
+        if (blogMenu && !blogMenuBtn?.contains(e.target) && !blogMenu?.contains(e.target)) {
+          blogMenu.classList.add('hidden');
+        }
+        if (recipesMenu && !recipesMenuBtn?.contains(e.target) && !recipesMenu?.contains(e.target)) {
+          recipesMenu.classList.add('hidden');
+        }
+        if (referralsMenu && !referralsMenuBtn?.contains(e.target) && !referralsMenu?.contains(e.target)) {
+          referralsMenu.classList.add('hidden');
+        }
+        if (peopleMenu && !peopleMenuBtn?.contains(e.target) && !peopleMenu?.contains(e.target)) {
+          peopleMenu.classList.add('hidden');
+        }
+      });
+    }
+
+    // Run on initial load
+    initAdminNav();
+    preventSamePageNavigation();
+
+    // Re-run after View Transitions
+    document.addEventListener('astro:after-swap', () => {
+      initAdminNav();
+      preventSamePageNavigation();
+    });
+  </script>
+</Layout>

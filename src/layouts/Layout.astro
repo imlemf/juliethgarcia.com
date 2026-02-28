@@ -1,0 +1,27 @@
+---
+import { ViewTransitions } from 'astro:transitions';
+import '@/styles/globals.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Plataforma de venta de productos digitales' } = Astro.props;
+const user = Astro.locals.user;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <ViewTransitions />
+  </head>
+  <body class="font-sans antialiased">
+    <slot />
+  </body>
+</html>

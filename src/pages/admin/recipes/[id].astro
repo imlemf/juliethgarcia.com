@@ -1,0 +1,20 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { RecipeForm } from '@/components/admin/recipe-form';
+
+const { id } = Astro.params;
+const title = 'Editar receta - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div>
+      <h1 class="text-3xl font-bold">Editar receta</h1>
+      <p class="text-muted-foreground mt-2">
+        Modifica los detalles de la receta
+      </p>
+    </div>
+
+    <RecipeForm recipeId={id} client:load />
+  </div>
+</AdminLayout>

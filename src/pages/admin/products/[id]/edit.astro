@@ -1,0 +1,60 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ProductForm } from '@/components/products/product-form';
+import { getDb } from '@/lib/db';
+import { getProductById } from '@/lib/db/queries/products';
+
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect('/admin/products');
+}
+
+const db = getDb(Astro.locals.runtime);
+const product = await getProductById(db, id);
+
+if (!product) {
+  return Astro.redirect('/admin/products');
+}
+
+const title = `Editar ${product.name} - Admin`;
+---
+
+<AdminLayout title={title}>
+  <div class="max-w-3xl mx-auto space-y-6">
+    <div>
+      <h1 class="text-3xl font-bold">Editar Producto</h1>
+      <p class="text-muted-foreground mt-2">
+        Modifica la información del producto
+      </p>
+    </div>
+
+    <Card client:load>
+      <CardHeader>
+        <CardTitle>Información del producto</CardTitle>
+        <CardDescription>
+          Actualiza los datos del producto
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ProductForm
+          client:load
+          mode="edit"
+          initialData={{
+            id: product.id,
+            name: product.name,
+            slug: product.slug,
+            description: product.description,
+            price: product.price,
+            currency: product.currency,
+            imageUrl: product.imageUrl || undefined,
+            fileKey: product.fileKey,
+            fileName: product.fileName,
+            isActive: product.isActive,
+          }}
+        />
+      </CardContent>
+    </Card>
+  </div>
+</AdminLayout>

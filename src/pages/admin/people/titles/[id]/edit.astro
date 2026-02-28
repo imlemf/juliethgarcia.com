@@ -1,0 +1,29 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { Icon } from 'astro-icon/components';
+import { PersonTitleForm } from '@/components/admin/person-title-form';
+
+const { id } = Astro.params;
+const title = 'Editar título - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div class="flex items-center gap-4">
+      <a
+        href="/admin/people/titles"
+        class="inline-flex items-center justify-center rounded-md border h-10 w-10 hover:bg-muted transition-colors"
+      >
+        <Icon name="lucide:arrow-left" class="h-4 w-4" />
+      </a>
+      <div>
+        <h1 class="text-3xl font-bold">Editar título</h1>
+        <p class="text-muted-foreground mt-1">
+          Modifica los datos del título profesional
+        </p>
+      </div>
+    </div>
+
+    <PersonTitleForm titleId={id} client:load />
+  </div>
+</AdminLayout>

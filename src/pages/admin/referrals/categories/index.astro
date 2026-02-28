@@ -1,0 +1,38 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { Icon } from 'astro-icon/components';
+import { ReferralCategoriesTable } from '@/components/admin/referral-categories-table';
+
+const title = 'Categorías de Referidos - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold">Categorías</h1>
+        <p class="text-muted-foreground mt-2">
+          Gestiona las categorías de links referidos (máximo 10)
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <a
+          href="/admin/referrals/links"
+          class="inline-flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
+        >
+          <Icon name="lucide:arrow-left" class="h-4 w-4" />
+          Volver a links
+        </a>
+        <a
+          href="/admin/referrals/categories/new"
+          class="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+        >
+          <Icon name="lucide:plus" class="h-4 w-4" />
+          Nueva categoría
+        </a>
+      </div>
+    </div>
+
+    <ReferralCategoriesTable client:load />
+  </div>
+</AdminLayout>

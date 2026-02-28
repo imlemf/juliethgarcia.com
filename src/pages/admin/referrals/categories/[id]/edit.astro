@@ -1,0 +1,22 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { ReferralCategoryForm } from '@/components/admin/referral-category-form';
+
+const title = 'Editar Categoría de Referidos - Admin';
+const { id } = Astro.params;
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div>
+      <h1 class="text-3xl font-bold">Editar Categoría</h1>
+      <p class="text-muted-foreground mt-2">
+        Modifica los datos de la categoría
+      </p>
+    </div>
+
+    <div class="max-w-2xl">
+      <ReferralCategoryForm categoryId={id} client:load />
+    </div>
+  </div>
+</AdminLayout>

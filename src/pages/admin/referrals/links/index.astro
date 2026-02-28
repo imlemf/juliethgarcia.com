@@ -1,0 +1,38 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { Icon } from 'astro-icon/components';
+import { ReferralLinksTable } from '@/components/admin/referral-links-table';
+
+const title = 'Links Referidos - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold">Links Referidos</h1>
+        <p class="text-muted-foreground mt-2">
+          Gestiona tus links de afiliados con tracking avanzado
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <a
+          href="/admin/referrals/categories"
+          class="inline-flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
+        >
+          <Icon name="lucide:folder" class="h-4 w-4" />
+          Categorías
+        </a>
+        <a
+          href="/admin/referrals/links/new"
+          class="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+        >
+          <Icon name="lucide:plus" class="h-4 w-4" />
+          Nuevo link
+        </a>
+      </div>
+    </div>
+
+    <ReferralLinksTable client:load />
+  </div>
+</AdminLayout>

@@ -1,0 +1,19 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { CouponForm } from '@/components/admin/coupon-form';
+
+const title = 'Nuevo Cupón - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div>
+      <h1 class="text-3xl font-bold">Nuevo Cupón</h1>
+      <p class="text-muted-foreground mt-2">
+        Crea un nuevo cupón de descuento
+      </p>
+    </div>
+
+    <CouponForm client:load />
+  </div>
+</AdminLayout>

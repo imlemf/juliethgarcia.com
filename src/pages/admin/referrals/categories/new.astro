@@ -1,0 +1,21 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { ReferralCategoryForm } from '@/components/admin/referral-category-form';
+
+const title = 'Nueva Categoría de Referidos - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div>
+      <h1 class="text-3xl font-bold">Nueva Categoría</h1>
+      <p class="text-muted-foreground mt-2">
+        Crea una nueva categoría para organizar tus links referidos
+      </p>
+    </div>
+
+    <div class="max-w-2xl">
+      <ReferralCategoryForm client:load />
+    </div>
+  </div>
+</AdminLayout>

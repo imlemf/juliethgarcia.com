@@ -1,0 +1,85 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { getDb } from '@/lib/db';
+import { products } from '@/db/schema';
+import { eq } from 'drizzle-orm';
+
+const db = getDb(Astro.locals.runtime);
+
+// Get all active products
+const activeProducts = await db
+  .select()
+  .from(products)
+  .where(eq(products.isActive, true))
+  .all();
+
+const title = 'Productos Digitales';
+const description = 'Descubre nuestra colección de productos digitales';
+---
+
+<Layout title={title} description={description}>
+  <div class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto text-center mb-12">
+      <h1 class="text-4xl font-bold mb-4">
+        Productos Digitales
+      </h1>
+      <p class="text-lg text-muted-foreground">
+        Descubre nuestra colección de productos digitales
+      </p>
+    </div>
+
+    {activeProducts.length === 0 ? (
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div class="col-span-full text-center py-12">
+          <p class="text-muted-foreground">
+            Próximamente: productos disponibles
+          </p>
+        </div>
+      </div>
+    ) : (
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {activeProducts.map((product) => (
+          <a
+            href={`/products/${product.slug}`}
+            class="group block rounded-lg border border-border bg-card overflow-hidden hover:border-primary transition-colors"
+          >
+            {product.imageUrl ? (
+              <div class="aspect-square w-full overflow-hidden bg-muted">
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            ) : (
+              <div class="aspect-square w-full bg-muted flex items-center justify-center">
+                <span class="text-4xl text-muted-foreground">📦</span>
+              </div>
+            )}
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
+                {product.name}
+              </h3>
+              {product.description && (
+                <p class="text-muted-foreground mb-4 line-clamp-2">
+                  {product.description}
+                </p>
+              )}
+              <div class="flex items-center justify-between">
+                <span class="text-2xl font-bold">
+                  {new Intl.NumberFormat('es-AR', {
+                    style: 'currency',
+                    currency: product.currency || 'USD',
+                  }).format((product.price || 0) / 100)}
+                </span>
+                <span class="text-primary group-hover:underline">
+                  Ver más →
+                </span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</Layout>

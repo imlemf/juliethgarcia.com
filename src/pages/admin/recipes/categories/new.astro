@@ -1,0 +1,19 @@
+---
+import AdminLayout from '@/layouts/AdminLayout.astro';
+import { RecipeCategoryForm } from '@/components/admin/recipe-category-form';
+
+const title = 'Nueva categoría - Admin';
+---
+
+<AdminLayout title={title}>
+  <div class="space-y-6">
+    <div>
+      <h1 class="text-3xl font-bold">Nueva categoría</h1>
+      <p class="text-muted-foreground mt-2">
+        Crea una nueva categoría para organizar tus recetas
+      </p>
+    </div>
+
+    <RecipeCategoryForm client:load />
+  </div>
+</AdminLayout>
