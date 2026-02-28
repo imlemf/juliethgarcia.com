@@ -3,8 +3,7 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { GripVertical, Pencil, Trash2, Eye, EyeOff, ExternalLink } from 'lucide-react';
-import * as LucideIcons from 'lucide-react';
+import { GripVertical, Pencil, Trash2, Eye, EyeOff, ExternalLink, Mail } from 'lucide-react';
 
 interface SiteLink {
   id: string;
@@ -54,10 +53,8 @@ export function LinkList({ links, onReorder, onDelete }: LinkListProps) {
       return <span className="text-2xl">{link.icon}</span>;
     }
 
-    // Render Lucide icon dynamically
-    const IconComponent = (LucideIcons as any)[link.icon] as React.ComponentType<{ className?: string }>;
-    if (IconComponent) {
-      return <IconComponent className="h-6 w-6" />;
+    if (link.iconType === 'lucide' && link.icon === 'Mail') {
+      return <Mail className="h-6 w-6" />;
     }
 
     return <span className="text-2xl">🔗</span>;
