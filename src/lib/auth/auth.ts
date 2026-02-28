@@ -5,8 +5,9 @@ import * as schema from '@/db/schema';
 import bcrypt from 'bcryptjs';
 
 // Create auth instance with D1 runtime binding
-export function createAuth(runtime: { env: { DB: D1Database } }) {
+export function createAuth(runtime: { env: { DB: D1Database; AUTH_SECRET?: string } }) {
   return betterAuth({
+    secret: runtime.env.AUTH_SECRET,
     database: drizzleAdapter(getDb(runtime), {
       provider: 'sqlite',
       schema: {
