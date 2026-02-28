@@ -15,8 +15,7 @@
   },
   // Custom domain
   "routes": [
-    { "pattern": "juliethgarcia.com", "custom_domain": true },
-    { "pattern": "www.juliethgarcia.com", "custom_domain": true }
+    { "pattern": "juliethgarcia.com", "custom_domain": true }
   ],
   // D1 Database binding
   "d1_databases": [
