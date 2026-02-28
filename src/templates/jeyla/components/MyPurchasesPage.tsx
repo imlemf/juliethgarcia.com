@@ -164,6 +164,8 @@ export function MyPurchasesPage({ config, isAuthenticated, purchases }: MyPurcha
                         <img
                           src={purchase.productImageUrl}
                           alt={purchase.productName}
+                          loading="lazy"
+                          decoding="async"
                           className="w-20 h-20 rounded-xl object-cover"
                         />
                       </div>

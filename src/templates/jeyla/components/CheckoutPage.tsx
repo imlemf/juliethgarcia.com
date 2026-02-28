@@ -311,6 +311,8 @@ export function CheckoutPage({ config, product, isAuthenticated, isPremium }: Ch
                   <img
                     src={product.imageUrl}
                     alt={product.name}
+                    loading="eager"
+                    decoding="async"
                     className="w-full h-full object-cover"
                   />
                 </div>

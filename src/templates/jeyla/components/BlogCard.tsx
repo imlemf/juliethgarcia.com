@@ -53,6 +53,8 @@ export function BlogCard({ blog, colors, variant = 'default' }: BlogCardExtended
               <img
                 src={blog.coverImage}
                 alt={blog.title}
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
               <div
@@ -135,6 +137,8 @@ export function BlogCard({ blog, colors, variant = 'default' }: BlogCardExtended
           <img
             src={blog.coverImage}
             alt={blog.title}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
           <div

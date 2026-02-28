@@ -114,6 +114,8 @@ export function RecipeDetailPage({ config, recipe, isAuthenticated, isPremium, m
                 <img
                   src={recipe.imageUrl}
                   alt={recipe.name}
+                  loading="eager"
+                  decoding="async"
                   className="w-full h-full object-cover"
                 />
               ) : (

@@ -135,7 +135,7 @@ export function BlogDetailPage({ config, blog, relatedBlogs, isAuthenticated, is
                 boxShadow: `0 25px 50px -12px ${pastelPink}50`,
               }}
             >
-              <img src={blog.coverImage} alt={blog.title} className="w-full h-full object-cover" />
+              <img src={blog.coverImage} alt={blog.title} loading="eager" decoding="async" className="w-full h-full object-cover" />
             </div>
           </div>
         </section>

@@ -40,6 +40,10 @@ export function FeaturedProduct({ product, colors }: FeaturedProductProps) {
               <img
                 src={product.imageUrl}
                 alt={product.name}
+                loading="eager"
+                decoding="async"
+                width={224}
+                height={224}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
             )}

@@ -61,6 +61,8 @@ export function LinksPage({ config, links, siteName = 'Jeyla' }: LinksPageProps)
                   <img
                     src={logoUrl}
                     alt={siteName}
+                    loading="eager"
+                    decoding="async"
                     className="w-full h-full object-cover"
                   />
                 ) : (

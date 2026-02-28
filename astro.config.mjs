@@ -18,6 +18,38 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            // React core - cached independently
+            if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
+              return 'react-vendor';
+            }
+            // Radix UI components
+            if (id.includes('node_modules/@radix-ui/')) {
+              return 'radix-ui';
+            }
+            // Zod validation
+            if (id.includes('node_modules/zod')) {
+              return 'zod';
+            }
+            // Better Auth
+            if (id.includes('node_modules/better-auth')) {
+              return 'better-auth';
+            }
+            // Tiptap editor (admin only)
+            if (id.includes('node_modules/@tiptap/') || id.includes('node_modules/prosemirror')) {
+              return 'tiptap';
+            }
+            // date-fns (admin only)
+            if (id.includes('node_modules/date-fns')) {
+              return 'date-fns';
+            }
+          },
+        },
+      },
+    },
     server: {
       watch: {
         ignored: ['**/.wrangler/**'],
