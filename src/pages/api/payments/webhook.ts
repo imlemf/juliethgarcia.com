@@ -39,7 +39,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Validate signature
-    const isValidSignature = await validateWebhookSignature(xSignature, xRequestId, dataId);
+    const isValidSignature = await validateWebhookSignature(xSignature, xRequestId, dataId, locals.runtime);
     if (!isValidSignature) {
       console.error('Invalid webhook signature');
       return new Response(JSON.stringify({ error: 'Invalid signature' }), {
@@ -67,7 +67,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const paymentId = body.data.id;
 
     // Fetch payment from Mercado Pago
-    const mpAccessToken = import.meta.env.MERCADOPAGO_ACCESS_TOKEN;
+    const mpAccessToken = (locals.runtime.env as Record<string, string>).MERCADOPAGO_ACCESS_TOKEN;
     if (!mpAccessToken) {
       console.error('MERCADOPAGO_ACCESS_TOKEN not configured');
       return new Response(JSON.stringify({ error: 'Configuration error' }), {
@@ -206,7 +206,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     console.log('Purchase ready for download link:', purchase.id);
 
     // Create download link
-    const expiryHours = parseInt(import.meta.env.DOWNLOAD_LINK_EXPIRY_HOURS || '48');
+    const runtimeEnv = locals.runtime.env as Record<string, string>;
+    const expiryHours = parseInt(runtimeEnv.DOWNLOAD_LINK_EXPIRY_HOURS || '48');
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + expiryHours);
 
@@ -216,7 +217,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       productId,
       token: downloadToken,
       expiresAt,
-      maxDownloads: parseInt(import.meta.env.MAX_DOWNLOADS_PER_PURCHASE || '5'),
+      maxDownloads: parseInt(runtimeEnv.MAX_DOWNLOADS_PER_PURCHASE || '5'),
     });
 
     console.log('Download link created:', downloadLink.id);
@@ -283,8 +284,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
         amount: Math.round(payment.transaction_amount * 100),
         currency: payment.currency_id,
         expiresAt,
-        maxDownloads: parseInt(import.meta.env.MAX_DOWNLOADS_PER_PURCHASE || '5'),
+        maxDownloads: parseInt(runtimeEnv.MAX_DOWNLOADS_PER_PURCHASE || '5'),
         isRegistered: !!existingUser,
+        runtime: locals.runtime as any,
       });
       console.log('Purchase confirmation email sent to:', emailToUse);
     } catch (emailError) {

@@ -35,7 +35,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const { email, name, phone, countryCode, turnstileToken } = result.data;
 
     // Validate Turnstile token
-    const turnstileValidation = await validateTurnstile(turnstileToken);
+    const turnstileValidation = await validateTurnstile(turnstileToken, locals.runtime);
     if (!turnstileValidation.success) {
       throw ErrorResponses.forbidden(turnstileValidation.error || 'Verificación anti-bot fallida');
     }

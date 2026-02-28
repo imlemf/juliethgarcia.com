@@ -93,7 +93,7 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
       result.data.avatarFileId !== existing.avatarFileId
     ) {
       try {
-        await deleteFromImageKit(existing.avatarFileId);
+        await deleteFromImageKit(existing.avatarFileId, locals.runtime as any);
       } catch (error) {
         console.error('Error deleting old avatar from ImageKit:', error);
       }
@@ -135,7 +135,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
     // Delete avatar from ImageKit if exists
     if (existing.avatarFileId) {
       try {
-        await deleteFromImageKit(existing.avatarFileId);
+        await deleteFromImageKit(existing.avatarFileId, locals.runtime as any);
       } catch (error) {
         console.error('Error deleting avatar from ImageKit:', error);
       }

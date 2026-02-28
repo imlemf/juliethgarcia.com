@@ -3,16 +3,18 @@ interface ImageKitUploadResult {
   fileId: string;
 }
 
-function getPrivateKey(): string {
-  const privateKey = import.meta.env.IMAGEKIT_PRIVATE_KEY;
+type ImageKitRuntime = { env: { IMAGEKIT_PRIVATE_KEY?: string } };
+
+function getPrivateKey(runtime: ImageKitRuntime): string {
+  const privateKey = runtime.env.IMAGEKIT_PRIVATE_KEY;
   if (!privateKey) {
     throw new Error('IMAGEKIT_PRIVATE_KEY no está configurada');
   }
   return privateKey;
 }
 
-export async function uploadToImageKit(file: File, folder: string = '/products'): Promise<ImageKitUploadResult> {
-  const privateKey = getPrivateKey();
+export async function uploadToImageKit(file: File, runtime: ImageKitRuntime, folder: string = '/products'): Promise<ImageKitUploadResult> {
+  const privateKey = getPrivateKey(runtime);
 
   const extension = file.name.split('.').pop() || 'jpg';
   const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${extension}`;
@@ -39,8 +41,8 @@ export async function uploadToImageKit(file: File, folder: string = '/products')
   return { url: data.url, fileId: data.fileId };
 }
 
-export async function deleteFromImageKit(fileId: string): Promise<void> {
-  const privateKey = getPrivateKey();
+export async function deleteFromImageKit(fileId: string, runtime: ImageKitRuntime): Promise<void> {
+  const privateKey = getPrivateKey(runtime);
 
   const response = await fetch(`https://api.imagekit.io/v1/files/${fileId}`, {
     method: 'DELETE',

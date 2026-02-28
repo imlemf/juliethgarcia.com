@@ -1,15 +1,13 @@
 import { Resend } from 'resend';
 
-let resendInstance: Resend | null = null;
-
-export function getResend(): Resend {
-  if (!resendInstance) {
-    if (!import.meta.env.RESEND_API_KEY) {
-      throw new Error('RESEND_API_KEY is not configured');
-    }
-    resendInstance = new Resend(import.meta.env.RESEND_API_KEY);
+export function getResend(runtime: { env: { RESEND_API_KEY?: string } }): Resend {
+  const apiKey = runtime.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error('RESEND_API_KEY is not configured');
   }
-  return resendInstance;
+  return new Resend(apiKey);
 }
 
-export const EMAIL_FROM = import.meta.env.EMAIL_FROM || 'noreply@yourdomain.com';
+export function getEmailFrom(runtime: { env: { EMAIL_FROM?: string } }): string {
+  return runtime.env.EMAIL_FROM || 'noreply@yourdomain.com';
+}

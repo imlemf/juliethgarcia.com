@@ -8,12 +8,15 @@ import { getR2Client } from './client';
  * @param expiresIn - URL expiration time in seconds (default: 3600 = 1 hour)
  * @returns Presigned URL string
  */
+type R2Runtime = { env: { R2_ACCOUNT_ID?: string; R2_ACCESS_KEY_ID?: string; R2_SECRET_ACCESS_KEY?: string; R2_BUCKET_NAME?: string } };
+
 export async function generatePresignedDownloadUrl(
   fileKey: string,
+  runtime: R2Runtime,
   expiresIn: number = 3600
 ): Promise<string> {
-  const client = getR2Client();
-  const bucketName = import.meta.env.R2_BUCKET_NAME;
+  const client = getR2Client(runtime);
+  const bucketName = runtime.env.R2_BUCKET_NAME;
 
   if (!bucketName) {
     throw new Error('R2_BUCKET_NAME environment variable is not set');

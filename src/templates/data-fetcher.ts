@@ -50,7 +50,8 @@ export async function fetchPageData(
   db: DbClient,
   templateId: string,
   auth: AuthContext,
-  params: RouteParams = {}
+  params: RouteParams = {},
+  runtime?: { env: Record<string, string> }
 ): Promise<Record<string, unknown>> {
   // Fetch social links for all pages (used in footer)
   const socialLinks = await fetchSocialLinks(db);
@@ -89,7 +90,7 @@ export async function fetchPageData(
       pageData = await fetchCheckoutData(db, params.slug, auth);
       break;
     case 'checkoutResult':
-      pageData = await fetchCheckoutResultData(db, params.searchParams);
+      pageData = await fetchCheckoutResultData(db, params.searchParams, runtime);
       break;
     case 'myPurchases':
       pageData = await fetchMyPurchasesData(db, auth);
@@ -436,7 +437,7 @@ async function fetchCheckoutData(db: DbClient, slug?: string, auth?: AuthContext
   };
 }
 
-async function fetchCheckoutResultData(db: DbClient, searchParams?: URLSearchParams) {
+async function fetchCheckoutResultData(db: DbClient, searchParams?: URLSearchParams, runtime?: { env: Record<string, string> }) {
   const paymentId = searchParams?.get('payment_id') || searchParams?.get('collection_id');
 
   let payment: any = null;
@@ -448,7 +449,7 @@ async function fetchCheckoutResultData(db: DbClient, searchParams?: URLSearchPar
 
   if (paymentId) {
     try {
-      const accessToken = import.meta.env.MERCADOPAGO_ACCESS_TOKEN;
+      const accessToken = runtime?.env.MERCADOPAGO_ACCESS_TOKEN;
       const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -517,7 +518,7 @@ async function fetchCheckoutResultData(db: DbClient, searchParams?: URLSearchPar
 
               // Create download link and send email if new
               if (created) {
-                const expiryHours = parseInt(import.meta.env.DOWNLOAD_LINK_EXPIRY_HOURS || '48');
+                const expiryHours = parseInt(runtime?.env.DOWNLOAD_LINK_EXPIRY_HOURS || '48');
                 const expiresAt = new Date();
                 expiresAt.setHours(expiresAt.getHours() + expiryHours);
 
@@ -528,7 +529,7 @@ async function fetchCheckoutResultData(db: DbClient, searchParams?: URLSearchPar
                   productId,
                   token: newDownloadToken,
                   expiresAt,
-                  maxDownloads: parseInt(import.meta.env.MAX_DOWNLOADS_PER_PURCHASE || '5'),
+                  maxDownloads: parseInt(runtime?.env.MAX_DOWNLOADS_PER_PURCHASE || '5'),
                 });
 
                 const product = await getProductById(db, productId);
@@ -545,8 +546,9 @@ async function fetchCheckoutResultData(db: DbClient, searchParams?: URLSearchPar
                       amount: Math.round(paymentData.transaction_amount * 100),
                       currency: paymentData.currency_id,
                       expiresAt,
-                      maxDownloads: parseInt(import.meta.env.MAX_DOWNLOADS_PER_PURCHASE || '5'),
+                      maxDownloads: parseInt(runtime?.env.MAX_DOWNLOADS_PER_PURCHASE || '5'),
                       isRegistered: !!existingUser,
+                      runtime: runtime as any,
                     });
                   } catch (emailError) {
                     console.error('Failed to send purchase email:', emailError);

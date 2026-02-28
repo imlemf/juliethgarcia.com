@@ -5,7 +5,10 @@ interface TurnstileResponse {
   hostname?: string;
 }
 
-export async function validateTurnstile(token: string): Promise<{ success: boolean; error?: string }> {
+export async function validateTurnstile(
+  token: string,
+  runtime: { env: { TURNSTILE_SECRET_KEY?: string } }
+): Promise<{ success: boolean; error?: string }> {
   try {
     // Skip Turnstile validation in development
     if (import.meta.env.DEV) {
@@ -13,7 +16,7 @@ export async function validateTurnstile(token: string): Promise<{ success: boole
       return { success: true };
     }
 
-    const secretKey = import.meta.env.TURNSTILE_SECRET_KEY;
+    const secretKey = runtime.env.TURNSTILE_SECRET_KEY;
 
     if (!secretKey) {
       console.error('TURNSTILE_SECRET_KEY is not configured');

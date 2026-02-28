@@ -11,14 +11,17 @@ import { createId } from '@paralleldrive/cuid2';
  * @param folder - Folder prefix for the file (default: 'products')
  * @returns Object with presigned URL and file key
  */
+type R2Runtime = { env: { R2_ACCOUNT_ID?: string; R2_ACCESS_KEY_ID?: string; R2_SECRET_ACCESS_KEY?: string; R2_BUCKET_NAME?: string } };
+
 export async function generatePresignedUploadUrl(
   fileName: string,
   contentType: string,
+  runtime: R2Runtime,
   expiresIn: number = 3600,
   folder: string = 'products'
 ): Promise<{ uploadUrl: string; fileKey: string }> {
-  const client = getR2Client();
-  const bucketName = import.meta.env.R2_BUCKET_NAME;
+  const client = getR2Client(runtime);
+  const bucketName = runtime.env.R2_BUCKET_NAME;
 
   if (!bucketName) {
     throw new Error('R2_BUCKET_NAME environment variable is not set');

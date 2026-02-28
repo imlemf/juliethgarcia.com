@@ -94,10 +94,10 @@ export const PATCH: APIRoute = async ({ params, request, locals }) => {
       if (imageFile && imageFile.size > 0) {
         // Delete old image from ImageKit if exists
         if (existingProduct.imageFileId) {
-          await deleteFromImageKit(existingProduct.imageFileId);
+          await deleteFromImageKit(existingProduct.imageFileId, locals.runtime as any);
         }
 
-        const result = await uploadToImageKit(imageFile);
+        const result = await uploadToImageKit(imageFile, locals.runtime as any);
         updateData.imageUrl = result.url;
         updateData.imageFileId = result.fileId;
         updateData.imageProvider = 'imagekit';

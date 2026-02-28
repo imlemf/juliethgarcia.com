@@ -8,9 +8,10 @@
 export async function validateWebhookSignature(
   xSignature: string,
   xRequestId: string,
-  dataId: string
+  dataId: string,
+  runtime: { env: { MERCADOPAGO_WEBHOOK_SECRET?: string } }
 ): Promise<boolean> {
-  const secret = import.meta.env.MERCADOPAGO_WEBHOOK_SECRET;
+  const secret = runtime.env.MERCADOPAGO_WEBHOOK_SECRET;
 
   if (!secret) {
     console.error('MERCADOPAGO_WEBHOOK_SECRET is not configured');

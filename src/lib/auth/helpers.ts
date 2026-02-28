@@ -11,10 +11,10 @@ export async function loginWithTurnstile(
   email: string,
   password: string,
   turnstileToken: string,
-  runtime: { env: { DB: D1Database } }
+  runtime: { env: { DB: D1Database; TURNSTILE_SECRET_KEY?: string } }
 ) {
   // Validate Turnstile
-  const turnstileValid = await validateTurnstile(turnstileToken);
+  const turnstileValid = await validateTurnstile(turnstileToken, runtime);
   if (!turnstileValid.success) {
     throw new Error(turnstileValid.error || 'Bot detection failed');
   }
@@ -44,10 +44,10 @@ export async function registerWithPurchaseCode(
   purchaseCode: string,
   password: string,
   turnstileToken: string,
-  runtime: { env: { DB: D1Database } }
+  runtime: { env: { DB: D1Database; TURNSTILE_SECRET_KEY?: string } }
 ) {
   // Validate Turnstile
-  const turnstileValid = await validateTurnstile(turnstileToken);
+  const turnstileValid = await validateTurnstile(turnstileToken, runtime);
   if (!turnstileValid.success) {
     throw new Error(turnstileValid.error || 'Bot detection failed');
   }

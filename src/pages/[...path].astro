@@ -55,7 +55,8 @@ const pageData = await fetchPageData(
     userId: Astro.locals.user?.id,
     userEmail: Astro.locals.user?.email,
   },
-  routeParams
+  routeParams,
+  Astro.locals.runtime as any
 );
 
 // For recipe detail, check if recipe was found

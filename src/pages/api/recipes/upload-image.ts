@@ -39,7 +39,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       });
     }
 
-    const result = await uploadToImageKit(imageFile, '/recipes');
+    const result = await uploadToImageKit(imageFile, locals.runtime as any, '/recipes');
 
     return new Response(JSON.stringify({ imageUrl: result.url, imageFileId: result.fileId }), {
       status: 200,

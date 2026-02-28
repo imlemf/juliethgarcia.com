@@ -1,5 +1,5 @@
 import { render } from '@react-email/render';
-import { getResend, EMAIL_FROM } from './client';
+import { getResend, getEmailFrom } from './client';
 import JeylaPurchaseConfirmationEmail from '@/templates/jeyla/emails/purchase-confirmation';
 
 interface SendPurchaseEmailParams {
@@ -14,6 +14,7 @@ interface SendPurchaseEmailParams {
   expiresAt: Date;
   maxDownloads: number;
   isRegistered?: boolean;
+  runtime: { env: { RESEND_API_KEY?: string; EMAIL_FROM?: string; PUBLIC_APP_URL?: string } };
 }
 
 export async function sendPurchaseEmail({
@@ -28,9 +29,10 @@ export async function sendPurchaseEmail({
   expiresAt,
   maxDownloads,
   isRegistered,
+  runtime,
 }: SendPurchaseEmailParams) {
   try {
-    const appUrl = import.meta.env.PUBLIC_APP_URL || 'http://localhost:4321';
+    const appUrl = runtime.env.PUBLIC_APP_URL || 'http://localhost:4321';
     const downloadUrl = `${appUrl}/downloads/${downloadToken}`;
 
     // Render email template
@@ -52,9 +54,10 @@ export async function sendPurchaseEmail({
     );
 
     // Send email via Resend
-    const resend = getResend();
+    const resend = getResend(runtime);
+    const emailFrom = getEmailFrom(runtime);
     const response = await resend.emails.send({
-      from: EMAIL_FROM,
+      from: emailFrom,
       to,
       subject: `¡Tu compra de "${productName}" está lista!`,
       html: emailHtml,

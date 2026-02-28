@@ -86,7 +86,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     let imageProvider: string | undefined;
 
     if (imageFile && imageFile.size > 0) {
-      const result = await uploadToImageKit(imageFile);
+      const result = await uploadToImageKit(imageFile, locals.runtime as any);
       imageUrl = result.url;
       imageFileId = result.fileId;
       imageProvider = 'imagekit';

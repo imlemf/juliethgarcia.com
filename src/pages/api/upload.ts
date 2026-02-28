@@ -49,7 +49,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Generate presigned upload URL
-    const { uploadUrl, fileKey } = await generatePresignedUploadUrl(fileName, contentType, 3600, folder);
+    const { uploadUrl, fileKey } = await generatePresignedUploadUrl(fileName, contentType, locals.runtime as any, 3600, folder);
 
     return new Response(
       JSON.stringify({

@@ -26,7 +26,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Validate Turnstile token (anti-bot protection)
-    const turnstileValidation = await validateTurnstile(turnstileToken);
+    const turnstileValidation = await validateTurnstile(turnstileToken, locals.runtime);
     if (!turnstileValidation.success) {
       throw ErrorResponses.forbidden(turnstileValidation.error || 'Bot detection failed');
     }
@@ -121,7 +121,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       price: finalAmount, // Use discounted price
       currency: product.currency,
       buyerEmail,
-    });
+    }, locals.runtime);
 
     // Update purchase with checkout URL
     await updatePurchase(db, purchase.id, {

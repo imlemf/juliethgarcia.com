@@ -9,13 +9,16 @@ export interface CreatePreferenceData {
   buyerEmail: string;
 }
 
-export async function createPaymentPreference(data: CreatePreferenceData) {
-  const accessToken = import.meta.env.MERCADOPAGO_ACCESS_TOKEN;
+export async function createPaymentPreference(
+  data: CreatePreferenceData,
+  runtime: { env: { MERCADOPAGO_ACCESS_TOKEN?: string; PUBLIC_APP_URL?: string } }
+) {
+  const accessToken = runtime.env.MERCADOPAGO_ACCESS_TOKEN;
   if (!accessToken) {
     throw new Error('MERCADOPAGO_ACCESS_TOKEN is not configured');
   }
 
-  const appUrl = import.meta.env.PUBLIC_APP_URL || 'https://example.com';
+  const appUrl = runtime.env.PUBLIC_APP_URL || 'https://example.com';
 
   console.log('Creating MercadoPago preference with appUrl:', appUrl);
 
