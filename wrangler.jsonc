@@ -13,6 +13,13 @@
   "observability": {
     "enabled": true
   },
+  // Environment variables (non-sensitive)
+  "vars": {
+    "AUTH_TRUST_HOST": "true",
+    "EMAIL_FROM": "noreply@juliethgarcia.com",
+    "DOWNLOAD_LINK_EXPIRY_HOURS": "48",
+    "MAX_DOWNLOADS_PER_PURCHASE": "5"
+  },
   // Custom domain
   "routes": [
     { "pattern": "juliethgarcia.com", "custom_domain": true }
