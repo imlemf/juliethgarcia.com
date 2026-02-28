@@ -18,7 +18,9 @@
     "AUTH_TRUST_HOST": "true",
     "EMAIL_FROM": "noreply@juliethgarcia.com",
     "DOWNLOAD_LINK_EXPIRY_HOURS": "48",
-    "MAX_DOWNLOADS_PER_PURCHASE": "5"
+    "MAX_DOWNLOADS_PER_PURCHASE": "5",
+    "IMAGEKIT_URL_ENDPOINT": "https://ik.imagekit.io/juliethgarciacom",
+    "IMAGEKIT_PUBLIC_KEY": "public_F2gwXEAliaeN+rvpGHXL2hTP5gw="
   },
   // Custom domain
   "routes": [
