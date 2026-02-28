@@ -87,11 +87,11 @@ export const onRequest: MiddlewareHandler = defineMiddleware(async (context, nex
     'Content-Security-Policy',
     [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://sdk.mercadopago.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://sdk.mercadopago.com https://static.cloudflareinsights.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: https: blob:",
       "font-src 'self' data: https://fonts.gstatic.com",
-      "connect-src 'self' https://api.mercadopago.com https://challenges.cloudflare.com",
+      "connect-src 'self' https://api.mercadopago.com https://challenges.cloudflare.com https://cloudflareinsights.com",
       "frame-src https://challenges.cloudflare.com https://www.mercadopago.com",
       "object-src 'none'",
       "base-uri 'self'",

@@ -5,12 +5,6 @@ import { getBlogsByCategory } from '@/lib/db/queries/blogs';
 import { getBlogCategoryBySlug, getAllBlogCategories } from '@/lib/db/queries/blog-categories';
 import { BlogCard } from '@/components/blog/blog-card';
 
-export async function getStaticPaths() {
-  return [];
-}
-
-export const prerender = false;
-
 const { slug } = Astro.params;
 
 if (!slug) {
