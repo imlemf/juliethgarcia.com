@@ -3,6 +3,7 @@ import type { HeaderProps } from '../../types';
 
 export function Header({ config, siteName = 'Jeyla', user }: HeaderProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   // Pastel colors from config with defaults
   const pastelCream = (config.pastelCream as string) || '#FFF8E7';
@@ -238,12 +239,144 @@ export function Header({ config, siteName = 'Jeyla', user }: HeaderProps) {
             className="md:hidden p-2 rounded-xl transition-colors"
             style={{ color: pastelTextDark }}
             aria-label="Menú"
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            {showMobileMenu ? (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
           </button>
         </div>
+
+        {/* Mobile menu */}
+        {showMobileMenu && (
+          <div
+            className="md:hidden mt-2 py-4 px-4 rounded-2xl"
+            style={{
+              backgroundColor: 'white',
+              boxShadow: `0 8px 30px ${pastelPink}40`,
+              border: `1px solid ${pastelMint}`,
+            }}
+          >
+            <div className="flex flex-col gap-1">
+              <a
+                href="/recipes"
+                className="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                style={{ color: pastelTextDark }}
+              >
+                Recetas
+              </a>
+              <a
+                href="/blog"
+                className="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                style={{ color: pastelTextDark }}
+              >
+                Blog
+              </a>
+              <a
+                href="/links"
+                className="px-3 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                style={{ color: pastelTextDark }}
+              >
+                Redes
+              </a>
+
+              {user ? (
+                <>
+                  <div className="my-2 border-t" style={{ borderColor: pastelMint }} />
+                  <div className="px-3 py-2">
+                    <p className="text-sm font-medium" style={{ color: pastelTextDark }}>{user.name}</p>
+                    <p className="text-xs" style={{ color: pastelTextMedium }}>{user.email}</p>
+                  </div>
+                  <div className="px-3 py-1">
+                    {user.isPremium ? (
+                      <div className="flex items-center gap-2 text-xs" style={{ color: pastelTextDark }}>
+                        <svg className="w-4 h-4" style={{ color: pastelGreenMint }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                          <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
+                          <path d="m9 12 2 2 4-4" />
+                        </svg>
+                        <span className="font-semibold">Premium</span>
+                        {formatPremiumDate(user.premiumUntil) && (
+                          <span style={{ color: pastelTextMedium }}>hasta {formatPremiumDate(user.premiumUntil)}</span>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 text-xs" style={{ color: pastelTextMedium }}>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                          <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
+                          <line x1="12" y1="8" x2="12" y2="12" />
+                          <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        <span className="font-semibold">Basic</span>
+                      </div>
+                    )}
+                  </div>
+                  <a
+                    href="/my-purchases"
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                    style={{ color: pastelTextDark }}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                    </svg>
+                    Mis Compras
+                  </a>
+                  {user.role === 'admin' && (
+                    <a
+                      href="/admin/dashboard"
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                      style={{ color: pastelTextDark }}
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                        <path d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                      </svg>
+                      Panel Admin
+                    </a>
+                  )}
+                  <button
+                    onClick={async () => {
+                      try {
+                        const res = await fetch('/api/auth/logout', { method: 'POST' });
+                        if (res.ok) {
+                          window.location.href = '/';
+                        }
+                      } catch (e) {
+                        console.error('Logout error:', e);
+                      }
+                    }}
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors w-full text-left"
+                    style={{ color: pastelTextDark }}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                      <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Cerrar sesión
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="my-2 border-t" style={{ borderColor: pastelMint }} />
+                  <a
+                    href="/login"
+                    className="mx-3 py-2.5 rounded-full font-medium text-sm text-center transition-all"
+                    style={{
+                      backgroundColor: pastelGreenMint,
+                      color: pastelTextDark,
+                      display: 'block',
+                    }}
+                  >
+                    Acceder
+                  </a>
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </nav>
     </header>
   );

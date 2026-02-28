@@ -179,12 +179,13 @@ export function NewsletterForm({ className, colors = {} }: NewsletterFormProps) 
         </div>
 
         {/* Turnstile */}
-        <div className="flex justify-center">
+        <div className="flex justify-center overflow-hidden">
           <Turnstile
             ref={turnstileRef}
             onVerify={setTurnstileToken}
             onError={() => setError('Error en verificación anti-bot')}
             onExpire={() => setTurnstileToken('')}
+            size="flexible"
           />
         </div>
 

@@ -522,7 +522,7 @@ export function HomePage({
 
           <div className="container mx-auto max-w-4xl relative z-10">
             <div
-              className="rounded-[2rem] p-8 md:p-12 backdrop-blur-md"
+              className="rounded-2xl sm:rounded-[2rem] p-4 sm:p-8 md:p-12 backdrop-blur-md"
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.85)',
                 boxShadow: `0 25px 50px -12px ${pastelPink}50, 0 0 0 1px rgba(255,255,255,0.5)`
@@ -578,7 +578,7 @@ export function HomePage({
 
                 {/* Right side - Form */}
                 <div
-                  className="rounded-2xl p-6 md:p-8"
+                  className="rounded-2xl p-4 sm:p-6 md:p-8"
                   style={{
                     backgroundColor: `${pastelPeach}30`,
                     border: `1px solid ${pastelPeach}60`
