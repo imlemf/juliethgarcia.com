@@ -27,6 +27,9 @@ const templateConfig = await getTemplateConfigObject(db, templateId);
 // Get site name for header/footer
 const siteName = await getSettingValue<string>(db, 'site.name') || 'Jeyla';
 
+// Get SEO title suffix
+const titleSuffix = await getSettingValue<string>(db, 'seo.titleSuffix') || '';
+
 // Check if user is authenticated and premium status
 const isAuthenticated = !!Astro.locals.user;
 const premiumUntilDate = Astro.locals.user?.premiumUntil
@@ -51,7 +54,7 @@ const user = Astro.locals.user ? {
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{title}</title>
+    <title>{title}{titleSuffix}</title>
     <ViewTransitions />
     <!-- Google Fonts for template fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
